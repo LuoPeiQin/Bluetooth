@@ -11,6 +11,7 @@
 **注意：部分Android6.0以上的手机需要定位权限才能正常使用蓝牙功能**
 
 ## 库地址
+[ ![Download](https://api.bintray.com/packages/luopeiqin/maven/bluetooth/images/download.svg?version=1.0.2) ](https://bintray.com/luopeiqin/maven/bluetooth/1.0.2/link)
 ```
 implementation 'com.stag:bluetooth:1.0.2'
 ```
