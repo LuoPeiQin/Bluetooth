@@ -10,6 +10,11 @@
 
 **注意：部分Android6.0以上的手机需要定位权限才能正常使用蓝牙功能**
 
+## 库地址
+```
+implementation 'com.stag:bluetooth:1.0.2'
+```
+
 ## 蓝牙基本操作相关接口说明
 
 > **调用的类为com.stag.bluetooth.BluetoothControl.java**
