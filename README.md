@@ -30,36 +30,36 @@ BluetoothController mController = BluetoothController.getController(this);
 
 ```java
 mController.registerBluetoothStateChangeListener(new OnBluetoothStateChangeListener() {
-            @Override
-            public void onBluetoothOpen() {
-                LogUtils.i(TAG + "lpq", "onBluetoothOpen: 蓝牙打开");
-            }
+    @Override
+    public void onBluetoothOpen() {
+	LogUtils.i(TAG + "lpq", "onBluetoothOpen: 蓝牙打开");
+    }
 
-            @Override
-            public void onBluetoothClose() {
-                LogUtils.i(TAG + "lpq", "onBluetoothClose: 蓝牙关闭");
-            }
-        });
+    @Override
+    public void onBluetoothClose() {
+	LogUtils.i(TAG + "lpq", "onBluetoothClose: 蓝牙关闭");
+    }
+});
 ```
 
 ### 注册蓝牙连接状态变化监听
 
 ```java
 mController.registerConnectStateChangeListener(new OnBluetoothConnectStateChangeListener() {
-            @Override
-            public void onBluetoothConnect(BluetoothDevice device, boolean isSuccess) {
-                if (isSuccess) {
-                    LogUtils.i(TAG + "lpq", "onBluetoothConnect: 蓝牙已连接");
-                } else {
-                    LogUtils.i(TAG + "lpq", "onBluetoothConnect: 蓝牙连接失败");
-                }
-            }
+    @Override
+    public void onBluetoothConnect(BluetoothDevice device, boolean isSuccess) {
+	if (isSuccess) {
+	    LogUtils.i(TAG + "lpq", "onBluetoothConnect: 蓝牙已连接");
+	} else {
+	    LogUtils.i(TAG + "lpq", "onBluetoothConnect: 蓝牙连接失败");
+	}
+    }
 
-            @Override
-            public void onBluetoothDisconnect(BluetoothDevice device) {
-                LogUtils.i(TAG + "lpq", "onBluetoothDisconnect: 蓝牙已断开");
-            }
-        });
+    @Override
+    public void onBluetoothDisconnect(BluetoothDevice device) {
+	LogUtils.i(TAG + "lpq", "onBluetoothDisconnect: 蓝牙已断开");
+    }
+});
 ```
 
 ### 切换蓝牙类型
@@ -73,16 +73,16 @@ mController.setBluetoothType(BluetoothType.TRADITION); // 传统蓝牙
 
 ```java
 mController.startScan(new OnBluetoothScanListener() {
-            @Override
-            public void onBluetoothScanFindDevice(BluetoothDevice device, int rssi) {
-                LogUtils.i(TAG + "lpq", "onBluetoothScanFindDevice: " + device.getAddress());
-            }
+    @Override
+    public void onBluetoothScanFindDevice(BluetoothDevice device, int rssi) {
+	LogUtils.i(TAG + "lpq", "onBluetoothScanFindDevice: " + device.getAddress());
+    }
 
-            @Override
-            public void onBluetoothScanFinish() {
-                LogUtils.i(TAG + "lpq", "onBluetoothScanFinish: ");
-            }
-        });
+    @Override
+    public void onBluetoothScanFinish() {
+	LogUtils.i(TAG + "lpq", "onBluetoothScanFinish: ");
+    }
+});
 ```
 
 ### 停止搜索蓝牙
@@ -109,14 +109,14 @@ mController.setBleHighSpeedMode(true);
 ### 取消注册监听回调
 
 ```java
-	@Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mController != null) {
-            mController.unregisterBluetoothStateChangeListener();
-            mController.unregisterConnectStateChangeListener();
-        }
-    }
+@Override
+protected void onDestroy() {
+	super.onDestroy();
+	if (mController != null) {
+	    mController.unregisterBluetoothStateChangeListener();
+	    mController.unregisterConnectStateChangeListener();
+	}
+}
 ```
 
 ## 蓝牙收发数据重点说明
