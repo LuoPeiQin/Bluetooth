@@ -15,6 +15,12 @@
 ```
 implementation 'com.stag:bluetooth:1.0.2'
 ```
+## 蓝牙搜索自定义View
+项目中增加了蓝牙搜素的自定义View，方便你快速的实现项目
+### 自定义View包含的内容
+1. 根据蓝牙的信号强度排序和显示；
+2. 有搜素或连接的历史记录功能（做小部分配置即可实现）；
+<img src="https://github.com/LuoPeiQin/Bluetooth/blob/master/%E7%A4%BA%E4%BE%8B1.jpg" width="50%">
 
 ## 蓝牙基本操作相关接口说明
 
