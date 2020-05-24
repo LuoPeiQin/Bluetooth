@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
          * 可以选择作为客户端搜索传统蓝牙，低功耗蓝牙
          * 或者作为传统蓝牙服务端
          */
-        mBluetoothController.setBluetoothType(BluetoothController.TYPE_TRADITION);
+        mBluetoothController.setBluetoothType(BluetoothController.TYPE_BLE);
     }
 
     /**
