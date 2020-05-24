@@ -1,0 +1,2 @@
+rootProject.name='Bluetooth'
+include ':app', ':bluetooth'

@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.helper;
 
 import android.bluetooth.BluetoothAdapter;
@@ -14,6 +10,10 @@ import com.stag.bluetooth.BluetoothTransfer;
 import com.stag.bluetooth.OnBluetoothConnectStateChangeListener;
 import com.stag.bluetooth.OnBluetoothTransmitListener;
 import com.stag.bluetooth.protocol.Protocol;
+
+/**
+ * Created by Administrator on 2016/11/14.
+ */
 
 public abstract class BluetoothHelper {
 
@@ -29,8 +29,7 @@ public abstract class BluetoothHelper {
     protected OnBluetoothTransmitListener transmitListener;//蓝牙数据收发监听
     protected Protocol mProtocol;
     private Handler handler;
-
-    BluetoothHelper(Context context) {
+    protected BluetoothHelper(Context context){
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
@@ -41,33 +40,33 @@ public abstract class BluetoothHelper {
 
     /**
      * BLE和传统都为改为异步进行
-     */
+     * */
     public abstract void connect(String address);
 
     public abstract void disconnect();
 
-    public void send(byte[] data) {
-        if (transmitListener != null)
+    public void send(byte[] data){
+        if (transmitListener!=null)
             transmitListener.onBluetoothSendData(data);
     }
 
     /**
      * 接收数据，不可主动调用
-     */
-    protected void recv(byte[] data) {
-        if (data == null || data.length == 0)
+     * */
+    protected void recv(byte[] data){
+        if (data==null||data.length==0)
             return;
-        if (transmitListener != null)
+        if (transmitListener!=null)
             transmitListener.onBluetoothRecvData(data);
         BluetoothTransfer.getInstance().addRecvData(data);
     }
 
-    protected void configHandler() {
-        handler = new Handler() {
+    protected void configHandler(){
+        handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                switch (msg.what) {
+                switch (msg.what){
                     case HANDLER_CONNECT_EVENT:
                         /*final boolean isSuccess = (Boolean) msg.obj;
                         if (isSuccess){
@@ -90,29 +89,28 @@ public abstract class BluetoothHelper {
         };
     }
 
-    protected void sendConnectResultMessage(boolean isSuccess) {
+    protected void sendConnectResultMessage(boolean isSuccess){
         Message.obtain(handler, HANDLER_CONNECT_EVENT, isSuccess).sendToTarget();
     }
 
-    protected void sendDisconnectResultMessage() {
+    protected void sendDisconnectResultMessage(){
         Message.obtain(handler, HANDLER_DISCONNECT_EVENT).sendToTarget();
     }
 
     /**
      * 连接回调
-     *
      * @param isSuccess 是否成功
-     */
-    private void connectCallback(boolean isSuccess) {
-        if (listener != null)
+     * */
+    private void connectCallback(boolean isSuccess){
+        if (listener!=null)
             listener.onBluetoothConnect(mDevice, isSuccess);
     }
 
     /**
      * 断开回调
-     */
-    private void disconnectCallback() {
-        if (listener != null)
+     * */
+    private void disconnectCallback(){
+        if (listener!=null)
             listener.onBluetoothDisconnect(mDevice);
     }
 
@@ -148,7 +146,7 @@ public abstract class BluetoothHelper {
         this.transmitListener = transmitListener;
     }
 
-    public void setProtocol(Protocol protocol) {
+    public void setProtocol(Protocol protocol){
         mProtocol = protocol;
     }
 }

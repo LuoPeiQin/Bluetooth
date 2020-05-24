@@ -1,16 +1,16 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'  //添加
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -23,13 +23,12 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-}
-
-publish {
-    userOrg = 'luopeiqin'//bintray.com用户名
-    groupId = 'com.stag'//jcenter上的路径
-    artifactId = 'bluetooth'//项目名称
-    publishVersion = '1.0.2'//版本号
-    desc = '蓝牙底层控制类'//描述，不重要
-    website = 'https://github.com/LuoPeiQin/Bluetooth'//网站，不重要
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+//    compile 'com.android.support:appcompat-v7:25.1.0'
+    testImplementation files('libs/samsung_ble_sdk_200.jar')
+    'junit:junit:4.12'
+    implementation files('libs/com.broadcom.bt.jar')
+    implementation files('libs/samsung_ble_sdk_200.jar')
 }

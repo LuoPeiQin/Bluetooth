@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.helper;
 
 import android.annotation.TargetApi;
@@ -22,14 +18,18 @@ import com.stag.bluetooth.extend.BleService;
 import com.stag.bluetooth.extend.IBle;
 import com.stag.bluetooth.protocol.Protocol;
 import com.stag.bluetooth.util.ByteUtils;
-import com.stag.bluetooth.util.LogUtils;
+import com.stag.bluetooth.util.Logs;
 
 import java.util.UUID;
+
+/**
+ * Created by Administrator on 2016/11/14.
+ */
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public final class BleHelper extends BluetoothHelper {
 
-    private static final String TAG = "lpq";
+    private static final String TAG = "LPQ";
     public final static UUID DEFAULT_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public final static String BLE_SCAN_FINISH = "BLE_SCAN_FINISH";
     private final static int SCAN_DURATION = 10000;
@@ -94,10 +94,10 @@ public final class BleHelper extends BluetoothHelper {
         mSingleSize = DEFAULT_SINGLE_SZIE;
         mGatt = mDevice.connectGatt(mContext, false, mCallBack);
         if (mGatt == null) {
-            LogUtils.d(TAG, "GATT NULL，FAIL");
+            Logs.d(TAG, "GATT NULL，FAIL");
             handleConnectEvent(isConnecting(), false);
         } else {
-            LogUtils.d(TAG, "start connect... " + address);
+            Logs.d(TAG, "start connect... " + address);
             startTimeoutCount();
         }
     }
@@ -175,7 +175,7 @@ public final class BleHelper extends BluetoothHelper {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                LogUtils.d(TAG, "timeout:" + !isConnected + " isResumeTimeoutCount:" + isResumeTimeoutCount);
+                Logs.d(TAG, "timeout:" + !isConnected + " isResumeTimeoutCount:" + isResumeTimeoutCount);
                 if (!isConnected && isResumeTimeoutCount)
                     handleConnectEvent(isConnecting(), false);
             }
@@ -197,7 +197,7 @@ public final class BleHelper extends BluetoothHelper {
     @Override
     public void send(byte[] data) {
         super.send(data);
-        if (mGatt == null || mCWrite == null || data == null || data.length == 0)
+        if(mGatt==null || mCWrite==null || data==null || data.length==0)
             return;
         /*int c = data.length/20;
         int remain = data.length%20;
@@ -206,7 +206,7 @@ public final class BleHelper extends BluetoothHelper {
             mCWrite.setValue(ByteUtils.subBytes(data, i*20, i==count-1?remain:20));
             for (int k=0;k<4;k++){
                 if (mGatt.writeCharacteristic(mCWrite)){
-                    LogUtils.d("lpq2", "成功 "+k);
+                    Logs.d("LPQ2", "成功 "+k);
                     try {
                         Thread.sleep(SEND_INTERVAL);
                     } catch (InterruptedException e) {
@@ -214,10 +214,10 @@ public final class BleHelper extends BluetoothHelper {
                     }
                     break;
                 }else if (k==3){
-                    LogUtils.d("lpq2", "失败 "+k);
+                    Logs.d("LPQ2", "失败 "+k);
                     return;
                 }else {
-                    LogUtils.d("lpq2", "失败 "+k);
+                    Logs.d("LPQ2", "失败 "+k);
                     try {
                         Thread.sleep(SEND_INTERVAL);
                     } catch (InterruptedException e) {
@@ -226,28 +226,27 @@ public final class BleHelper extends BluetoothHelper {
                 }
             }
         }*/
-        int sendInterval = mProtocol == null ? Protocol.BLE_MAX_SEND_INTERVAL : mProtocol.getMaxBleSendInterval();
+        int sendInterval = mProtocol==null? Protocol.BLE_MAX_SEND_INTERVAL :mProtocol.getMaxBleSendInterval();
         if (data.length <= mSingleSize) {
             mCWrite.setValue(data);
-            LogUtils.d("lpq", "prepare small send");
+            Logs.d("LPQ", "prepare small send");
             sendResult = false;
             boolean res = mGatt.writeCharacteristic(mCWrite);
-            LogUtils.d("lpq", "after small writeCharacteristic:" + res + " " + ByteUtils.toString(data));
+            Logs.d("LPQ", "after small writeCharacteristic:"+res+" "+ByteUtils.toString(data));
 
             if (sendResult) {
-                LogUtils.d("lpq", "small abnormal");
+                Logs.d("LPQ", "small abnormal");
                 return;
-            }
-            ;
+            };
 
             synchronized (BleHelper.this) {
                 try {
                     long i = System.currentTimeMillis();
                     wait(sendInterval);
-                    long t = System.currentTimeMillis() - i;
-                    if (t > mMaxTime) {
+                    long t  = System.currentTimeMillis()-i;
+                    if (t>mMaxTime){
                         mMaxTime = t;
-                        LogUtils.d("lpq", "max interval：" + mMaxTime);
+                        Logs.d("LPQ","max interval："+mMaxTime);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -272,25 +271,24 @@ public final class BleHelper extends BluetoothHelper {
                 if (!isConnected())
                     return;
                 mCWrite.setValue(sendData);
-                LogUtils.d("lpq", "prepare big send");
+                Logs.d("LPQ", "prepare big send");
                 sendResult = false;
                 boolean res = mGatt.writeCharacteristic(mCWrite);
-                LogUtils.d("lpq", "after big writeCharacteristic:" + sendData.length + " result:" + res + " " + ByteUtils.toString(sendData));
+                Logs.d("LPQ", "after big writeCharacteristic:" + sendData.length + " result:"+res+" "+ByteUtils.toString(sendData));
 
                 if (sendResult) {
-                    LogUtils.d("lpq", "big success");
+                    Logs.d("LPQ", "big success");
                     continue;
-                }
-                ;
+                };
 
                 synchronized (BleHelper.this) {
                     try {
                         long i2 = System.currentTimeMillis();
                         wait(sendInterval);
-                        long t = System.currentTimeMillis() - i2;
-                        if (t > mMaxTime) {
+                        long t  = System.currentTimeMillis()-i2;
+                        if (t>mMaxTime){
                             mMaxTime = t;
-                            LogUtils.d("lpq", "max interval：" + mMaxTime);
+                            Logs.d("LPQ","max interval："+mMaxTime);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -316,14 +314,14 @@ public final class BleHelper extends BluetoothHelper {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                LogUtils.d(TAG, "success，discoverServices");
+                Logs.d(TAG, "success，discoverServices");
                 mGatt.discoverServices();
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                LogUtils.d(TAG, "fail，stop");
+                Logs.d(TAG, "fail，stop");
                 stopTimeoutCount();
                 handleConnectEvent(isConnecting, false);
             }
-            LogUtils.d(TAG, "connect state---" + newState);
+            Logs.d(TAG, "connect state---" + newState);
         }
 
         @Override
@@ -335,23 +333,23 @@ public final class BleHelper extends BluetoothHelper {
                     if (service != null) {
                         mCWrite = service.getCharacteristic(mProtocol.getSendTunnelUUID());
                         mCRead = service.getCharacteristic(mProtocol.getRecvTunnelUUID());
-                    } else {
-                        LogUtils.d("lpq", "service is null");
+                    }else {
+                        Logs.d("LPQ", "service is null");
                     }
                 }
-                if (mCRead == null || mCWrite == null) {
+                if (mCRead == null || mCWrite == null){
                     for (BluetoothGattService s : mGatt.getServices()) {
-                        if (mCWrite == null) {
+                        if(mCWrite == null){
                             mCWrite = s.getCharacteristic(mProtocol.getSendTunnelUUID());
-                            if (mCWrite != null)
-                                LogUtils.d("lpq", "write service:" + s.getUuid().toString());
+                            if (mCWrite!=null)
+                                Logs.d("LPQ", "write service:"+s.getUuid().toString());
                         }
                         if (mCRead == null) {
                             mCRead = s.getCharacteristic(mProtocol.getRecvTunnelUUID());
-                            if (mCRead != null)
-                                LogUtils.d("lpq", "read service:" + s.getUuid().toString());
+                            if (mCRead!=null)
+                                Logs.d("LPQ", "read service:"+s.getUuid().toString());
                         }
-                        if (mCWrite != null && mCRead != null) {
+                        if (mCWrite!=null&&mCRead!=null){
                             break;
                         }
                     }
@@ -379,7 +377,7 @@ public final class BleHelper extends BluetoothHelper {
                         value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE;
                         isSet = true;
                     }
-                    if (isSet) {
+                    if (isSet){
                         UUID descriptorUUID = mProtocol.getDescriptorUUID() == null ? DEFAULT_DESCRIPTOR_UUID : mProtocol.getDescriptorUUID();
                         mGatt.setCharacteristicNotification(mCRead, true);
                         BluetoothGattDescriptor descriptor = mCRead.getDescriptor(descriptorUUID);
@@ -389,12 +387,12 @@ public final class BleHelper extends BluetoothHelper {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                LogUtils.d(TAG, "writeDescriptor " + b);
-                                synchronized (mGatt) {
+                                Logs.d(TAG, "writeDescriptor "+b);
+                                synchronized (mGatt){
                                     try {
                                         mWriteDescriptorResult = false;
                                         mGatt.wait(MAX_WRITE_DESCRIPTOR_TIME);
-                                        LogUtils.d(TAG, "write --- connect success" + isConnecting());
+                                        Logs.d(TAG, "write --- connect success" + isConnecting());
                                         handleConnectEvent(isConnecting(), true);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
@@ -402,16 +400,16 @@ public final class BleHelper extends BluetoothHelper {
                                 }
                             }
                         }).start();
-                    } else {
-                        LogUtils.d(TAG, "no write --- connect success " + isConnecting());
+                    }else {
+                        Logs.d(TAG, "no write --- connect success " + isConnecting());
                         handleConnectEvent(isConnecting(), true);
                     }
                     return;
                 } else {
-                    LogUtils.d(TAG, "read-write null");
+                    Logs.d(TAG, "read-write null");
                 }
             } else {
-                LogUtils.d(TAG, "onServicesDiscovered fail " + status);
+                Logs.d(TAG, "onServicesDiscovered fail " + status);
             }
             handleConnectEvent(isConnecting(), false);
         }
@@ -423,12 +421,12 @@ public final class BleHelper extends BluetoothHelper {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 mSingleSize = mtu - 3;
                 mSetHeightSpeedModeResult = true;
-                LogUtils.d("lpq", "MTU change success " + mtu);
-            } else {
+                Logs.d("LPQ", "MTU change success "+mtu);
+            }else {
                 mSetHeightSpeedModeResult = false;
-                LogUtils.d("lpq", "MTU change fail " + mtu);
+                Logs.d("LPQ", "MTU change fail "+mtu);
             }
-            synchronized (mGatt) {
+            synchronized (mGatt){
                 mGatt.notify();
             }
         }
@@ -436,57 +434,57 @@ public final class BleHelper extends BluetoothHelper {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            synchronized (BleHelper.this) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
+            synchronized (BleHelper.this){
+                if (status==BluetoothGatt.GATT_SUCCESS){
                     sendResult = true;
-                    LogUtils.d("lpq", "send success " + ByteUtils.toString(characteristic.getValue()));
-                } else {
+                    Logs.d("LPQ", "send success "+ByteUtils.toString(characteristic.getValue()));
+                }else {
                     sendResult = false;
-                    LogUtils.d("lpq", "sen fail，status:" + status + "   " + ByteUtils.toString(characteristic.getValue()));
+                    Logs.d("LPQ", "sen fail，status:"+status+"   "+ByteUtils.toString(characteristic.getValue()));
                 }
                 BleHelper.this.notify();
-                LogUtils.d("lpq", "send complete, notify end");
+                Logs.d("LPQ", "send complete, notify end");
             }
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
-            mWriteDescriptorResult = status == BluetoothGatt.GATT_SUCCESS;
-            LogUtils.d("lpq", "Write result: " + mWriteDescriptorResult);
-            synchronized (mGatt) {
+            mWriteDescriptorResult = status==BluetoothGatt.GATT_SUCCESS;
+            Logs.d("LPQ", "Write result: "+mWriteDescriptorResult);
+            synchronized (mGatt){
                 mGatt.notify();
             }
         }
     };
 
-    public boolean isHighSpeedMode() {
+    public boolean isHighSpeedMode(){
         return mSingleSize > DEFAULT_SINGLE_SZIE;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public boolean setHighConnectionPriority(boolean flag) {
+    public boolean setHighConnectionPriority(boolean flag){
         if (mGatt == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
             return false;
-        return mGatt.requestConnectionPriority(flag ? BluetoothGatt.CONNECTION_PRIORITY_HIGH : BluetoothGatt.CONNECTION_PRIORITY_BALANCED);
+        return mGatt.requestConnectionPriority(flag ? BluetoothGatt.CONNECTION_PRIORITY_HIGH:BluetoothGatt.CONNECTION_PRIORITY_BALANCED);
     }
 
-    public boolean setHighSpeedMode(boolean flag) {
+    public boolean setHighSpeedMode(boolean flag){
         mSetHeightSpeedModeResult = false;
-        if (mGatt == null)
+        if (mGatt==null)
             return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
             return false;
         int mtuSize = 3;
-        if (flag) {
+        if (flag){
             mtuSize += MAX_SINGLE_SZIE;
-        } else {
+        }else {
             mtuSize += DEFAULT_SINGLE_SZIE;
         }
 
-        synchronized (mGatt) {
+        synchronized (mGatt){
             boolean res = mGatt.requestMtu(mtuSize);
-            LogUtils.d("lpq", "request Max Mtu " + (mtuSize) + " result:" + res);
+            Logs.d("LPQ", "request Max Mtu " + (mtuSize) + " result:"+res);
             if (!res)
                 return false;
 

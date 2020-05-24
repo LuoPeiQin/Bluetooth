@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth;
 
 import com.stag.bluetooth.protocol.ParseResult;
@@ -15,6 +11,7 @@ import java.util.LinkedList;
 /**
  * 蓝牙传输控制类
  * 目前不支持流水号，如果同一条指令并发发送，采取FIFO的形式
+ * Created by LPQ on 2016/11/14.
  */
 
 public final class BluetoothTransfer {
@@ -31,9 +28,7 @@ public final class BluetoothTransfer {
     private Thread recvHandlerThread;                       //负责处理接收到的数据
     private Thread timeoutCheckThread;
     private boolean isResume;
-    private final Object recvLock;
-    private Object sendLock;
-    private Object waitRespondLock;
+    private Object recvLock, sendLock, waitRespondLock;
     private BluetoothDispatch dispatch;
 
     public static BluetoothTransfer getInstance(){
@@ -224,7 +219,7 @@ public final class BluetoothTransfer {
                                 }
                                 iterator.remove();
                             }else {
-//                                LogUtils.i("lpq", "没有timeout");
+//                                Logs.d("LPQ", "没有timeout");
                             }
                         }
                     }

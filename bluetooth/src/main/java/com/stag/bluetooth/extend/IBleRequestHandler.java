@@ -4,7 +4,7 @@
  * use, installation, modification or redistribution of this XPG software
  * constitutes acceptance of these terms.� If you do not agree with these terms,
  * please do not use, install, modify or redistribute this XPG software.
- * <p>
+ * 
  * In consideration of your agreement to abide by the following terms, and
  * subject to these terms, XPG grants you a non-exclusive license, under XPG's
  * copyrights in this original XPG software (the "XPG Software"), to use and
@@ -18,13 +18,13 @@
  * express or implied, are granted by XPG herein, including but not limited to
  * any patent rights that may be infringed by your derivative works or by other
  * works in which the XPG Software may be incorporated.
- * <p>
+ * 
  * The XPG Software is provided by XPG on an "AS IS" basis.� XPG MAKES NO
  * WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED
  * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, REGARDING THE XPG SOFTWARE OR ITS USE AND OPERATION ALONE OR IN
  * COMBINATION WITH YOUR PRODUCTS.
- * <p>
+ * 
  * IN NO EVENT SHALL XPG BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -32,7 +32,7 @@
  * AND/OR DISTRIBUTION OF THE XPG SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER
  * THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR
  * OTHERWISE, EVEN IF XPG HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * <p>
+ * 
  * ABOUT XPG: Established since June 2005, Xtreme Programming Group, Inc. (XPG)
  * is a digital solutions company based in the United States and China. XPG
  * integrates cutting-edge hardware designs, mobile applications, and cloud
@@ -40,7 +40,7 @@
  * partners and customers include global leading corporations in semiconductor,
  * home appliances, health/wellness electronics, toys and games, and automotive
  * industries. Visit www.xtremeprog.com for more information.
- * <p>
+ * 
  * Copyright (C) 2013 Xtreme Programming Group, Inc. All Rights Reserved.
  */
 
@@ -48,29 +48,29 @@ package com.stag.bluetooth.extend;
 
 public interface IBleRequestHandler {
 
-    public boolean connect(String address);
+	public boolean connect(String address);
 
-    /**
-     * @param address
-     * @param characteristic
-     * @return
-     */
-    public boolean readCharacteristic(String address,
-                                      BleGattCharacteristic characteristic);
+	/**
+	 * @param address
+	 * @param characteristic
+	 * @return
+	 */
+	public boolean readCharacteristic(String address,
+									  BleGattCharacteristic characteristic);
 
-    /**
-     * @param address
-     * @param characteristic
-     * @return
-     */
-    public boolean characteristicNotification(String address,
-                                              BleGattCharacteristic characteristic);
+	/**
+	 * @param address
+	 * @param characteristic
+	 * @return
+	 */
+	public boolean characteristicNotification(String address,
+											  BleGattCharacteristic characteristic);
 
-    /**
-     * @param address
-     * @param characteristic
-     * @return
-     */
-    public boolean writeCharacteristic(String address,
-                                       BleGattCharacteristic characteristic);
+	/**
+	 * @param address
+	 * @param characteristic
+	 * @return
+	 */
+	public boolean writeCharacteristic(String address,
+									   BleGattCharacteristic characteristic);
 }

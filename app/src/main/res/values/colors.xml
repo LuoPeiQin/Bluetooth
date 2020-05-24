@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--主色调-->
+    <color name="colorPrimaryLight">#B3E5FC</color>
+    <color name="colorPrimaryDark">#13619f</color>
+    <color name="colorPrimary">#1c82d4</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="iconsDisable">#757575</color>
+    <color name="titleTextColor">#FFFFFF</color>
+
+    <!--支付宝-->
+    <!--<color name="Indigo_colorPrimaryDark">#13619f</color>-->
+    <!--<color name="Indigo_colorPrimary">#1c82d4</color>-->
+    <!--<color name="Indigo_nav_color">#4675FF</color>-->
+
+    <!--<color name="littleblue">#00bbff</color>-->
+    <color name="littleblue">@color/colorPrimary</color>
+
+    <color name="dialog_bg">#ffe74c3c</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="divider_color">#11000000</color>
+    <color name="msg_color">#FFFFFFFF</color>
+
+    <color name="btn_press_color">#66000000</color>
+    <color name="btn_unpress_color">#22000000</color>
+
+    <color name="gray_light">#EAEAEA</color>
+
+    <!-- ticket color -->
+    <color name="ticket_green">#00a910</color>
+
+
+    <color name="gray">#E3E8ED</color>
+    <color name="black">#000000</color><!--黑色 -->
+    <color name="white">#FFFFFF</color><!--白色-->
+    <color name="ghostwhite">#f8f8ff</color><!--幽灵白 -->
+    <color name="grey">#808080</color><!--灰色 -->
+    <color name="gainsboro">#dcdcdc</color><!--淡灰色 -->
+
+    <color name="red">#ff0000</color><!--红色 -->
+    <color name="orange">#ffa500</color><!--橙色 -->
+    <color name="green">#008000</color><!--绿色 -->
+    <color name="blue">#0000ff</color><!--蓝色 -->
+
+    <color name="float_transparent">#00000000</color>
+    <color name="sweet_dialog_bg_color">#FFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="gray_btn_bg_color">#D0D0D0</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="blue_btn_bg_pressed_color">#96BFD2</color>
+    <color name="red_btn_bg_color">#DD6B55</color>
+    <color name="red_btn_bg_pressed_color">#CD5B55</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="trans_success_stroke_color">#33A5DC86</color>
+    <color name="warning_stroke_color">#F8BB86</color>
+    <color name="dark_gray">#707f84</color>
+
+    <!--seerbar-->
+    <color name="text_gray">#323232</color>
+    <!-- grass -->
+    <color name="grass_light">#a8e3ce</color>
+
+    <!-- dark -->
+
+    <!-- snow -->
+    <color name="snow_dark">#dddddd</color>
+
+    <!-- sea -->
+
+    <!-- blood -->
+    <color name="blood_primary">#d94130</color>
+
+    <!--Material Colors-->
+
+    <!--按钮背景颜色-->
+    <color name="btn_bg_blue">#1fbaf3</color>
+    <color name="text_color_default">#bfbfbf</color>
+    <!--主背景颜色-->
+    <color name="litlt_grey">#F0F0F0</color>
+</resources>

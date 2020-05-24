@@ -1,13 +1,10 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth;
 
-import com.stag.bluetooth.protocol.Packet;
+import com.stag.bluetooth.packet.Packet;
 
 /**
  * 蓝牙发送任务
+ * Created by Bruce on 2016/11/15.
  */
 
 public final class BluetoothTask<T extends Packet> {

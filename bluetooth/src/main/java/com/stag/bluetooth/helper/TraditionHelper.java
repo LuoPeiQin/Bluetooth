@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.helper;
 
 import android.bluetooth.BluetoothSocket;
@@ -15,6 +11,10 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
+/**
+ * Created by Administrator on 2016/11/14.
+ */
+
 public final class TraditionHelper extends BluetoothHelper {
 
     private final static UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // SPP服务UUID号
@@ -23,16 +23,16 @@ public final class TraditionHelper extends BluetoothHelper {
     private InputStream is;
     private OutputStream os;
 
-    public static TraditionHelper getInstance(Context context) {
-        if (instance == null) {
-            synchronized (TraditionHelper.class) {
+    public static TraditionHelper getInstance(Context context){
+        if (instance==null){
+            synchronized (TraditionHelper.class){
                 instance = new TraditionHelper(context);
             }
         }
         return instance;
     }
 
-    private TraditionHelper(Context context) {
+    private TraditionHelper(Context context){
         super(context);
     }
 
@@ -50,7 +50,7 @@ public final class TraditionHelper extends BluetoothHelper {
     public void connect(final String address) {
         setConnecting(true);
         configHandler();
-        new Thread() {
+        new Thread(){
             @Override
             public void run() {
                 super.run();
@@ -62,7 +62,7 @@ public final class TraditionHelper extends BluetoothHelper {
                     os = bthSocket.getOutputStream();
                 } catch (IOException e) {
                     try {
-                        bthSocket = (BluetoothSocket) mDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(mDevice, 1);
+                        bthSocket =(BluetoothSocket) mDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(mDevice,1);
                         bthSocket.connect();
                         is = bthSocket.getInputStream();
                         os = bthSocket.getOutputStream();
@@ -95,16 +95,16 @@ public final class TraditionHelper extends BluetoothHelper {
 
     @Override
     public void disconnect() {
-        if (isConnected()) {
+        if (isConnected()){
             setConnected(false);
             if (bthSocket != null) {
                 try {
                     is.close();
                     os.close();
                     bthSocket.close();
-                    bthSocket = null;
-                    is = null;
-                    os = null;
+                    bthSocket=null;
+                    is=null;
+                    os=null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -121,10 +121,10 @@ public final class TraditionHelper extends BluetoothHelper {
             while (isConnected()) {
                 try {
 //                    if (is.available() > 0) {
-                    num = is.read(buffer, 0, 1024);
-                    if (num > 0) {
-                        recv(ByteUtils.subBytes(buffer, 0, num));
-                    }
+                        num = is.read(buffer, 0, 1024);
+                        if (num > 0) {
+                            recv(ByteUtils.subBytes(buffer, 0, num));
+                        }
 //                    } else {
 //                        Thread.sleep(1);
 //                    }
@@ -138,7 +138,7 @@ public final class TraditionHelper extends BluetoothHelper {
     @Override
     public void send(byte[] data) {
         super.send(data);
-        if (data == null || data.length == 0)
+        if (data==null || data.length==0)
             return;
         if (os != null) {
             try {

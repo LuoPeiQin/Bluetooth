@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth;
 
 import android.os.Handler;
@@ -12,6 +8,7 @@ import java.util.concurrent.Executors;
 
 /**
  * 派遣所有回调的事件，根据Task分发到主线程或者子线程，建立线程池分发执行
+ * Created by LPQ on 2016/11/18.
  */
 
 public final class BluetoothDispatch {
@@ -20,7 +17,7 @@ public final class BluetoothDispatch {
     private ExecutorService mCatchThreadPool;
     private Handler mMainHandler;
 
-    protected static BluetoothDispatch getInstance(){
+    public static BluetoothDispatch getInstance(){
         if (instance==null){
             synchronized (BluetoothDispatch.class){
                 if (instance==null)

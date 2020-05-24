@@ -4,9 +4,10 @@ import android.util.Log;
 
 import com.stag.bluetooth.BuildConfig;
 
+
 public class LogUtils {
 
-    private static boolean isDebug = BuildConfig.DEBUG;
+    private static boolean isDebug = true;
 
     private LogUtils() {
     }

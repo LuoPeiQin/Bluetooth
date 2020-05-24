@@ -1,47 +1,14 @@
 package com.stag.bluetooth.util;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Created by Administrator on 2016/7/25 0025.
+ */
 public final class ByteUtils {
-
-    /**
-     * 将Byte数组转化为int,取第一二个字节
-     *
-     * @param b
-     * @return
-     */
-    public static int bytes2ToInt(byte[] b) {
-        int c = (int) ((b[0] << 8) & 0xFF00L);
-        c |= (int) (b[1] & 0xFFL);
-        return c;
-    }
-
-    /**
-     * 将Byte数组转化为int,取第一三个字节
-     *
-     * @param b
-     * @return
-     */
-    public static int bytes2ToInt2(byte[] b) {
-        int c = (int) ((b[1] << 16) & 0xFFFFFF00L);
-        c |= (int) (b[0]);
-        return c;
-    }
-
-    /**
-     * 4字节byte转化成UUID 大端模式
-     *
-     * @param b
-     * @return
-     */
-    public static UUID byte4ToUuidBigEndian(byte[] b) {
-        long l = (long) b[3] & 0xffL;
-        l |= ((long) b[2] << 8) & 0xff00L;
-        l |= ((long) b[1] << 16) & 0xff0000L;
-        l |= ((long) b[0] << 24) & 0xff000000L;
-        return new UUID(0, l);
-    }
 
     /**
      * 比较两个byte数组
@@ -82,10 +49,10 @@ public final class ByteUtils {
      * @return
      */
     public static long byte4ToLongBigEndian(byte[] b) {
-        long l = (long) b[3] & 0xffL;
-        l |= ((long) b[2] << 8) & 0xff00L;
-        l |= ((long) b[1] << 16) & 0xff0000L;
-        l |= ((long) b[0] << 24) & 0xff000000L;
+        long l = (long)b[3] & 0xffL;
+        l |= ((long)b[2] << 8) & 0xff00L;
+        l |= ((long)b[1] << 16) & 0xff0000L;
+        l |= ((long)b[0] << 24) & 0xff000000L;
         return l;
     }
 
@@ -139,14 +106,14 @@ public final class ByteUtils {
      * @return
      */
     public static long byte8ToLongBigEndian(byte[] b) {
-        long l = (long) b[7] & 0xffL;
-        l |= ((long) b[6] << 8) & 0xff00L;
-        l |= ((long) b[5] << 16) & 0xff0000L;
-        l |= ((long) b[4] << 24) & 0xff000000L;
-        l |= ((long) b[3] << 32) & 0xff00000000L;
-        l |= ((long) b[2] << 40) & 0xff0000000000L;
-        l |= ((long) b[1] << 48) & 0xff000000000000L;
-        l |= ((long) b[0] << 56) & 0xff00000000000000L;
+        long l = (long)b[7] & 0xffL;
+        l |= ((long)b[6] << 8) & 0xff00L;
+        l |= ((long)b[5] << 16) & 0xff0000L;
+        l |= ((long)b[4] << 24) & 0xff000000L;
+        l |= ((long)b[3] << 32) & 0xff00000000L;
+        l |= ((long)b[2] << 40) & 0xff0000000000L;
+        l |= ((long)b[1] << 48) & 0xff000000000000L;
+        l |= ((long)b[0] << 56) & 0xff00000000000000L;
         return l;
     }
 
@@ -168,7 +135,6 @@ public final class ByteUtils {
         b[0] = (byte) ((l >> 56) & 0xffL);
         return b;
     }
-
     /**
      * 大端模式将4个字节的Byte转成int型
      *
@@ -523,4 +489,57 @@ public final class ByteUtils {
             bytes[i] = buffer.array()[i];
         return bytes;
     }
+
+    /**
+     * 获取bytes的Ascii码对应的字符串
+     * @param bytes
+     * @return
+     */
+    public static String getAsciiString(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        String result = "";
+        for (int i = 0; i < bytes.length; ++i) {
+            result += (char)bytes[i];
+        }
+        return result;
+    }
+
+
+    public static String bytesToHexString(byte[] src){
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
+    }
+
+
+
+    /**
+     * byte[] To list
+     * @param data
+     * @return
+     */
+    public static List<Byte> byteToList(byte[] data) {
+        List<Byte> list = null;
+        if (data != null && data.length > 0) {
+            list = new ArrayList<>();
+            for (int i = 0; i < data.length; ++i) {
+                list.add(data[i]);
+            }
+        }
+        return list;
+    }
+
+
 }

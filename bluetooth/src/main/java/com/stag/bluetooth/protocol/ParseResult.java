@@ -1,14 +1,13 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.protocol;
 
 import com.stag.bluetooth.BluetoothDispatch;
+import com.stag.bluetooth.packet.Packet;
 
 /**
  * 蓝牙收到的数据解析结果
+ * Created by Administrator on 2016/11/15.
  */
+
 public final class ParseResult {
 
     private ResultType type;
@@ -17,11 +16,9 @@ public final class ParseResult {
 
     private BluetoothDispatch.Callback callback;    //主动事件才不为null
 
-    public ParseResult() {
+    public ParseResult(){
 
-    }
-
-    ;
+    };
 
     public ParseResult(ResultType type, Packet packet, BluetoothDispatch.Callback callback) {
         this.type = type;

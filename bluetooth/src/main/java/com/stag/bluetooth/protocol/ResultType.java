@@ -1,8 +1,8 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.protocol;
+
+/**
+ * Created by Administrator on 2016/11/28.
+ */
 
 public enum ResultType {
     RESPOND,    //响应事件

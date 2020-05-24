@@ -1,16 +1,15 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth.protocol;
 
 import android.content.Context;
 
+import com.stag.bluetooth.packet.Packet;
+
 import java.util.UUID;
 
 /**
- * 蓝牙收发数据协议控制
+ * Created by Administrator on 2016/11/14.
  */
+
 public abstract class Protocol<E extends Packet, T extends OnEventListener> {
     public final static int BLE_MAX_SEND_INTERVAL = 500;
     protected Context mContext;
@@ -38,15 +37,15 @@ public abstract class Protocol<E extends Packet, T extends OnEventListener> {
 
     /**
      * 初始化
-     */
-    public void initialize() {
+     * */
+    public void initialize(){
 
     }
 
     /**
      * 销毁
-     */
-    public void destroy() {
+     * */
+    public void destroy(){
         mContext = null;
         mEventListener = null;
     }
@@ -63,14 +62,14 @@ public abstract class Protocol<E extends Packet, T extends OnEventListener> {
 
     /**
      * 获取协议类型
-     */
+     * */
     public abstract int getType();
 
     /**
      * 是否设置了主动事件监听
-     */
-    protected boolean haveSetEventListener() {
-        return mEventListener != null;
+     * */
+    protected boolean haveSetEventListener(){
+        return mEventListener!=null;
     }
 
     public UUID getServiceUUID() {
@@ -91,14 +90,14 @@ public abstract class Protocol<E extends Packet, T extends OnEventListener> {
 
     /**
      * 建议最大发送间隔
-     */
+     * */
     public void setMaxBleSendInterval(int interval) {
         mMaxBleSendInterval = interval;
     }
 
     /**
-     * 有的协议对应目标硬件接收间隔有限制
-     */
+     * 有的协议对应目标硬件接收间隔有限制，例如生久
+     * */
     public int getMaxBleSendInterval() {
         return mMaxBleSendInterval;
     }

@@ -4,7 +4,7 @@
  * use, installation, modification or redistribution of this XPG software
  * constitutes acceptance of these terms.� If you do not agree with these terms,
  * please do not use, install, modify or redistribute this XPG software.
- * <p>
+ * 
  * In consideration of your agreement to abide by the following terms, and
  * subject to these terms, XPG grants you a non-exclusive license, under XPG's
  * copyrights in this original XPG software (the "XPG Software"), to use and
@@ -18,13 +18,13 @@
  * express or implied, are granted by XPG herein, including but not limited to
  * any patent rights that may be infringed by your derivative works or by other
  * works in which the XPG Software may be incorporated.
- * <p>
+ * 
  * The XPG Software is provided by XPG on an "AS IS" basis.� XPG MAKES NO
  * WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED
  * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, REGARDING THE XPG SOFTWARE OR ITS USE AND OPERATION ALONE OR IN
  * COMBINATION WITH YOUR PRODUCTS.
- * <p>
+ * 
  * IN NO EVENT SHALL XPG BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -32,7 +32,7 @@
  * AND/OR DISTRIBUTION OF THE XPG SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER
  * THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR
  * OTHERWISE, EVEN IF XPG HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * <p>
+ * 
  * ABOUT XPG: Established since June 2005, Xtreme Programming Group, Inc. (XPG)
  * is a digital solutions company based in the United States and China. XPG
  * integrates cutting-edge hardware designs, mobile applications, and cloud
@@ -40,7 +40,7 @@
  * partners and customers include global leading corporations in semiconductor,
  * home appliances, health/wellness electronics, toys and games, and automotive
  * industries. Visit www.xtremeprog.com for more information.
- * <p>
+ * 
  * Copyright (C) 2013 Xtreme Programming Group, Inc. All Rights Reserved.
  */
 
@@ -61,109 +61,109 @@ import java.util.UUID;
 @SuppressLint("NewApi")
 public class BleGattService {
 
-    private BLESDK mBleSDK;
-    private com.samsung.android.sdk.bt.gatt.BluetoothGattService mGattServiceS;
-    private com.broadcom.bt.gatt.BluetoothGattService mGattServiceB;
-    private android.bluetooth.BluetoothGattService mGattServiceA;
-    private String mName;
+	private BLESDK mBleSDK;
+	private com.samsung.android.sdk.bt.gatt.BluetoothGattService mGattServiceS;
+	private com.broadcom.bt.gatt.BluetoothGattService mGattServiceB;
+	private android.bluetooth.BluetoothGattService mGattServiceA;
+	private String mName;
 
-    BleGattService(com.samsung.android.sdk.bt.gatt.BluetoothGattService s) {
-        mBleSDK = BLESDK.SAMSUNG;
-        mGattServiceS = s;
-        initInfo();
-    }
+	public BleGattService(com.samsung.android.sdk.bt.gatt.BluetoothGattService s) {
+		mBleSDK = BLESDK.SAMSUNG;
+		mGattServiceS = s;
+		initInfo();
+	}
 
-    BleGattService(com.broadcom.bt.gatt.BluetoothGattService s) {
-        mBleSDK = BLESDK.BROADCOM;
-        mGattServiceB = s;
-        initInfo();
-    }
+	public BleGattService(com.broadcom.bt.gatt.BluetoothGattService s) {
+		mBleSDK = BLESDK.BROADCOM;
+		mGattServiceB = s;
+		initInfo();
+	}
 
-    BleGattService(android.bluetooth.BluetoothGattService s) {
-        mBleSDK = BLESDK.ANDROID;
-        mGattServiceA = s;
-        initInfo();
-    }
+	public BleGattService(android.bluetooth.BluetoothGattService s) {
+		mBleSDK = BLESDK.ANDROID;
+		mGattServiceA = s;
+		initInfo();
+	}
 
-    private void initInfo() {
-        mName = "Unknown Service";
-    }
+	private void initInfo() {
+		mName = "Unknown Service";
+	}
 
-    public UUID getUuid() {
-        if (mBleSDK == BLESDK.BROADCOM) {
-            return mGattServiceB.getUuid();
-        } else if (mBleSDK == BLESDK.SAMSUNG) {
-            return mGattServiceS.getUuid();
-        } else if (mBleSDK == BLESDK.ANDROID) {
-            return mGattServiceA.getUuid();
-        }
+	public UUID getUuid() {
+		if (mBleSDK == BLESDK.BROADCOM) {
+			return mGattServiceB.getUuid();
+		} else if (mBleSDK == BLESDK.SAMSUNG) {
+			return mGattServiceS.getUuid();
+		} else if (mBleSDK == BLESDK.ANDROID) {
+			return mGattServiceA.getUuid();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public List<BleGattCharacteristic> getCharacteristics() {
-        ArrayList<BleGattCharacteristic> list = new ArrayList<BleGattCharacteristic>();
-        if (mBleSDK == BLESDK.BROADCOM) {
-            for (com.broadcom.bt.gatt.BluetoothGattCharacteristic c : mGattServiceB
-                    .getCharacteristics()) {
-                list.add(new BleGattCharacteristic(c));
-            }
-        } else if (mBleSDK == BLESDK.SAMSUNG) {
-            for (Object o : mGattServiceS.getCharacteristics()) {
-                com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic c = (com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic) o;
-                list.add(new BleGattCharacteristic(c));
-            }
-        } else if (mBleSDK == BLESDK.ANDROID) {
-            for (BluetoothGattCharacteristic c : mGattServiceA
-                    .getCharacteristics()) {
-                list.add(new BleGattCharacteristic(c));
-            }
-        }
+	public List<BleGattCharacteristic> getCharacteristics() {
+		ArrayList<BleGattCharacteristic> list = new ArrayList<BleGattCharacteristic>();
+		if (mBleSDK == BLESDK.BROADCOM) {
+			for (com.broadcom.bt.gatt.BluetoothGattCharacteristic c : mGattServiceB
+					.getCharacteristics()) {
+				list.add(new BleGattCharacteristic(c));
+			}
+		} else if (mBleSDK == BLESDK.SAMSUNG) {
+			for (Object o : mGattServiceS.getCharacteristics()) {
+				com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic c = (com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic) o;
+				list.add(new BleGattCharacteristic(c));
+			}
+		} else if (mBleSDK == BLESDK.ANDROID) {
+			for (BluetoothGattCharacteristic c : mGattServiceA
+					.getCharacteristics()) {
+				list.add(new BleGattCharacteristic(c));
+			}
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    public BleGattCharacteristic getCharacteristic(UUID uuid) {
-        if (mBleSDK == BLESDK.ANDROID) {
-            BluetoothGattCharacteristic c = mGattServiceA
-                    .getCharacteristic(uuid);
-            if (c != null) {
-                return new BleGattCharacteristic(c);
-            }
-        } else if (mBleSDK == BLESDK.SAMSUNG) {
-            com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic c = mGattServiceS
-                    .getCharacteristic(uuid);
-            if (c != null) {
-                return new BleGattCharacteristic(c);
-            }
-        } else if (mBleSDK == BLESDK.BROADCOM) {
-            com.broadcom.bt.gatt.BluetoothGattCharacteristic c = mGattServiceB
-                    .getCharacteristic(uuid);
-            if (c != null) {
-                return new BleGattCharacteristic(c);
-            }
-        }
+	public BleGattCharacteristic getCharacteristic(UUID uuid) {
+		if (mBleSDK == BLESDK.ANDROID) {
+			BluetoothGattCharacteristic c = mGattServiceA
+					.getCharacteristic(uuid);
+			if (c != null) {
+				return new BleGattCharacteristic(c);
+			}
+		} else if (mBleSDK == BLESDK.SAMSUNG) {
+			com.samsung.android.sdk.bt.gatt.BluetoothGattCharacteristic c = mGattServiceS
+					.getCharacteristic(uuid);
+			if (c != null) {
+				return new BleGattCharacteristic(c);
+			}
+		} else if (mBleSDK == BLESDK.BROADCOM) {
+			com.broadcom.bt.gatt.BluetoothGattCharacteristic c = mGattServiceB
+					.getCharacteristic(uuid);
+			if (c != null) {
+				return new BleGattCharacteristic(c);
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public void setInfo(JSONObject info) {
-        if (info == null) {
-            return;
-        }
+	public void setInfo(JSONObject info) {
+		if (info == null) {
+			return;
+		}
 
-        try {
-            setName(info.getString("name"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			setName(info.getString("name"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public String getName() {
-        return mName;
-    }
+	public String getName() {
+		return mName;
+	}
 
-    public void setName(String mName) {
-        this.mName = mName;
-    }
+	public void setName(String mName) {
+		this.mName = mName;
+	}
 }

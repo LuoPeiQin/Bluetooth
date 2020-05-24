@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019. luopeiqin All rights reserved.
- */
-
 package com.stag.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
@@ -10,31 +6,40 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.text.TextUtils;
 
 import com.stag.bluetooth.extend.BleService;
 import com.stag.bluetooth.helper.BleHelper;
 import com.stag.bluetooth.helper.BluetoothHelper;
 import com.stag.bluetooth.helper.TraditionHelper;
+import com.stag.bluetooth.helper.TraditionServerHelper;
 import com.stag.bluetooth.protocol.Protocol;
-import com.stag.bluetooth.util.LogUtils;
+import com.stag.bluetooth.util.Logs;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 蓝牙总控制，提供外部需要调用的接口
+ * 蓝牙总控制
+ * Created by LPQ on 2017/11/14.
  */
 
 public final class BluetoothController {
 
+    //Bluetooth type
+    public static final short TYPE_BLE = 1; // 客户端：低功耗蓝牙
+    public static final short TYPE_TRADITION = 2; // 客户端：传统蓝牙
+    public static final short TYPE_TRADITION_SERVER = 3; // 服务器：传统蓝牙
+    //Bluetooth scan filter
+//    public static final short SCAN_FILTER_ALL = 0;
+//    public static final short SCAN_FILTER_NAME_NON_NULL = 1;
+//    public static final short SCAN_FILTER_TYPE_MATCHING = 2;
     private static BluetoothController controller;
-    private static BluetoothHelper mHelper;
+    private BluetoothHelper mHelper;
     private Protocol mProtocol;
-    private BluetoothType mBluetoothType;
+    private short mBluetoothType;
     private Context mContext;
-    private OnBluetoothScanListener mScanListener;                         //蓝牙扫描监听
+    private OnBluetoothScanListener mScanListener;                                 //蓝牙扫描监听
     private OnBluetoothConnectStateChangeListener mCurrentConnectlistener; //当前controller连接状态监听
     private OnBluetoothConnectStateChangeListener mParamConnectlistener;   //传进来的连接状态监听
     private OnBluetoothStateChangeListener mBluetoothStateListener;     //监听手机蓝牙状态
@@ -46,11 +51,10 @@ public final class BluetoothController {
     public static BluetoothController getController(Context context) {
         if (controller == null) {
             synchronized (BluetoothController.class) {
-                if (controller == null) {
+                if (controller == null)
                     if (context == null)
                         throw new NullPointerException("BluetoothController init fail, context is null!");
-                    controller = new BluetoothController(context);
-                }
+                controller = new BluetoothController(context);
             }
         }
         return controller;
@@ -58,12 +62,12 @@ public final class BluetoothController {
 
     private BluetoothController(Context context) {
         mContext = context.getApplicationContext();
-        mDevices = new ArrayList<>(20);
+        mDevices = new LinkedList<BluetoothDevice>();
         mCurrentConnectlistener = new OnBluetoothConnectStateChangeListener() {
             @Override
             public void onBluetoothConnect(BluetoothDevice device, boolean isSuccess) {
                 if (isSuccess) {
-                    /*设置发送方法*/
+                /*设置发送方法*/
                     setSendMethod();
                     /**启动蓝牙传输*/
                     BluetoothTransfer.getInstance().start();
@@ -80,12 +84,9 @@ public final class BluetoothController {
                     mParamConnectlistener.onBluetoothDisconnect(device);
             }
         };
-        setBluetoothType(BluetoothType.BLE);
+        setBluetoothType(TYPE_BLE);
     }
 
-    /**
-     * 蓝牙连接状态监听
-     */
     public OnBluetoothConnectStateChangeListener getConnectStateChangeListener() {
         return mParamConnectlistener;
     }
@@ -98,9 +99,6 @@ public final class BluetoothController {
         registerConnectStateChangeListener(null);
     }
 
-    /**
-     * 蓝牙开关状态监听
-     */
     public OnBluetoothStateChangeListener getBluetoothStateChangeListener() {
         return mBluetoothStateListener;
     }
@@ -109,72 +107,48 @@ public final class BluetoothController {
         mBluetoothStateListener = listener;
     }
 
-    public void unregisterBluetoothStateChangeListener() {
+    public void unregisterBluetoothStateChangeListener(){
         registerBluetoothStateChangeListener(null);
     }
 
-    /**
-     * 蓝牙数据传输监听
-     */
-    protected OnBluetoothTransmitListener getTransmitListener() {
+    public OnBluetoothTransmitListener getTransmitListener() {
         if (mHelper != null)
             return mHelper.getTransmitListener();
         return null;
     }
 
     public void registerTransmitListener(OnBluetoothTransmitListener transmitListener) {
-        BleHelper.getInstance(mContext).setTransmitListener(transmitListener);
-        TraditionHelper.getInstance(mContext).setTransmitListener(transmitListener);
+//        BleHelper.getInstance(mContext).setTransmitListener(transmitListener);
+//        TraditionHelper.getInstance(mContext).setTransmitListener(transmitListener);
+        mHelper.setTransmitListener(transmitListener);
     }
 
-    public void unregisterTransmitListener() {
+    public void unregisterTransmitListener(){
         registerTransmitListener(null);
     }
 
-    /**
-     * 设置蓝牙类型
-     */
-    public void setBluetoothType(BluetoothType bluetoothType) {
+    public void setBluetoothType(short bluetoothType) {
         if (mBluetoothType == bluetoothType)
             return;
         mBluetoothType = bluetoothType;
-        if (mBluetoothType == BluetoothType.BLE) {
+        if (mBluetoothType == TYPE_BLE) {
             mHelper = BleHelper.getInstance(mContext);
-        } else {
+        } else if (mBluetoothType == TYPE_TRADITION){
             mHelper = TraditionHelper.getInstance(mContext);
+        } else {
+            mHelper = TraditionServerHelper.getInstance(mContext);
         }
         mHelper.setProtocol(mProtocol);
         mHelper.setConnectStateChangeListener(mCurrentConnectlistener);
         setSendMethod();
     }
 
-    /**
-     * 获取蓝牙类型,BLE或者传统
-     */
-    public BluetoothType getBluetoothType() {
-        return mBluetoothType;
-    }
-
-    /**
-     * 切换蓝牙类型
-     */
-    public boolean switchBluetoothType(BluetoothType bluetoothType) {
-        if (mHelper.isConnected())
-            return false;
-        setBluetoothType(bluetoothType == BluetoothType.BLE ? BluetoothType.BLE : BluetoothType.TRADITION);
-        mHelper.setProtocol(mProtocol);
-        return true;
-    }
-
-    /**
-     * 设置传输协议
-     */
     public void setProtocol(Protocol protocol) {
         if (mProtocol != null) {
             mProtocol.destroy();
         }
         mProtocol = protocol;
-        if (mProtocol != null)
+        if (mProtocol!=null)
             mProtocol.initialize();
         if (mHelper != null)
             mHelper.setProtocol(protocol);
@@ -188,45 +162,46 @@ public final class BluetoothController {
     /**
      * 是否已经连接设备
      */
-    public static boolean isConnected() {
+    public boolean isConnected() {
         if (mHelper != null)
             return mHelper.isConnected();
         return false;
     }
 
-    public static boolean isConnecting() {
+    public boolean isConnecting(){
         if (mHelper != null)
             return mHelper.isConnecting();
         return false;
     }
 
-    /**
-     * 是否正在扫描蓝牙设备
-     */
-    public boolean isScanning() {
+    public boolean isScanning(){
         return isScanning;
     }
 
-    protected boolean setBleHighConnectionPriority(boolean flag) {
+    /**
+     * 获取蓝牙类型,BLE或者传统
+     */
+    public short getBluetoothType() {
+        return mBluetoothType;
+    }
+
+    public boolean setBleHighConnectionPriority(boolean flag){
         boolean res = false;
-        if (mHelper != null && mBluetoothType == BluetoothType.BLE)
+        if (mHelper!=null && mBluetoothType==TYPE_BLE)
             res = ((BleHelper) mHelper).setHighConnectionPriority(flag);
         return res;
     }
 
-    /**
-     * 设置低功耗蓝牙的发送速率
-     */
-    public boolean setBleHighSpeedMode(boolean flag) {
+    public boolean setBleHighSpeedMode(boolean flag){
         boolean res = false;
-        if (mHelper != null && mBluetoothType == BluetoothType.BLE)
+        if (mHelper!=null && mBluetoothType==TYPE_BLE)
             res = ((BleHelper) mHelper).setHighSpeedMode(flag);
         return res;
     }
 
-    public boolean isBleHighSpeedMode() {
+    public boolean isBleHighSpeedMode(){
         boolean res = false;
-        if (mHelper != null && mBluetoothType == BluetoothType.BLE)
+        if (mHelper!=null && mBluetoothType==TYPE_BLE)
             res = ((BleHelper) mHelper).isHighSpeedMode();
         return res;
     }
@@ -256,11 +231,7 @@ public final class BluetoothController {
         connect(address, mProtocol);
     }
 
-    public void connect(String address, Protocol protocol) {
-        if (isConnecting() || isConnected()) {
-            LogUtils.e("lpq", "connect: " + "蓝牙已连接，无法同时连接多个蓝牙");
-            return;
-        }
+    public void connect(String address, Protocol protocol){
         setProtocol(protocol);
         mHelper.connect(address);
     }
@@ -282,11 +253,13 @@ public final class BluetoothController {
             isStartScanning = true;
             stopScan();
         }
-        if (mScanListener != listener)
+        if (mScanListener!=listener)
             mScanListener = listener;
         registerBluetoothBroadcast();
         isScanning = true;
         mHelper.startScan();
+//        BleHelper.getInstance(mContext).startScan();
+//        TraditionHelper.getInstance(mContext).startScan();
     }
 
     /**
@@ -296,11 +269,19 @@ public final class BluetoothController {
         if (isScanning) {
             mScanListener = null;//防止DeviceListActivity内存泄漏
             mHelper.stopScan();
+//            BleHelper.getInstance(mContext).stopScan();
+//            TraditionHelper.getInstance(mContext).stopScan();
             if (isScanRemoveRepeat())
                 mDevices.clear();
             isScanning = false;
         }
     }
+
+    /*private void stopScan(boolean isSelf){
+        if (isSelf){
+            stopScan();
+        }
+    }*/
 
     private void registerBluetoothBroadcast() {
         IntentFilter filter = new IntentFilter();
@@ -328,7 +309,7 @@ public final class BluetoothController {
         public void onReceive(Context context, Intent intent) {
             BluetoothDevice device = null;
             int rssi;
-            switch (intent.getAction()) {
+            switch (intent.getAction()){
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
                     switch (blueState) {
@@ -347,7 +328,7 @@ public final class BluetoothController {
                     }
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                    LogUtils.i("lpq", "discontect from broadcast");
+                    Logs.d("LPQ", "discontect from broadcast");
                     if (mHelper != null)
                         mHelper.disconnect();
                     break;
@@ -359,9 +340,9 @@ public final class BluetoothController {
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
                     if (mScanListener != null)
                         mScanListener.onBluetoothScanFinish();
-                    if (isStartScanning) {
+                    if (isStartScanning){
                         isStartScanning = false;
-                    } else {
+                    }else {
                         stopScan();
                     }
                     break;
@@ -375,8 +356,7 @@ public final class BluetoothController {
                     if (mScanListener != null)
                         mScanListener.onBluetoothScanFinish();
                     break;
-                default:
-                    break;
+                default:break;
             }
 
         }
@@ -386,19 +366,14 @@ public final class BluetoothController {
      * 处理扫描发现结果
      */
     private void handleScanFindResult(BluetoothDevice device, int rssi, boolean isBle) {
-        if (device == null)
-            return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            LogUtils.i("lpq", "Bluetooth name:" + device.getName() + "  address:" + device.getAddress() + "  type:" + device.getType());
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && (isBle ^ device.getType() == BluetoothDevice.DEVICE_TYPE_LE)) {
+        if (device == null) {
             return;
         }
         if (TextUtils.isEmpty(device.getName())) {
             return;
         }
 
-        if (isScanRemoveRepeat()) {
+        if (mScanRemoveRepeat) {
             for (BluetoothDevice m : mDevices) {
                 if (m.getAddress().equals(device.getAddress())) {
                     return;
@@ -407,8 +382,9 @@ public final class BluetoothController {
             mDevices.add(device);
         }
 
-        if (mScanListener != null)
-            mScanListener.onBluetoothScanFindDevice(device, rssi);
+        if (mScanListener != null) {
+            mScanListener.onBluetoothScanFindDevice(device, rssi, isBle);
+        }
     }
 
     public void setScanRemoveRepeat(boolean b) {
