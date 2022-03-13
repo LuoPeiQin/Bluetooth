@@ -192,6 +192,9 @@ public final class ByteUtils {
     }
 
     public static String toString(byte[] data) {
+        if (data == null) {
+            return null;
+        }
         StringBuffer buffer = new StringBuffer();
         for (byte b : data) {
             String d = Integer.toHexString(b & 0xff);

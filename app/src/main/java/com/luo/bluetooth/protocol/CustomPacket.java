@@ -3,12 +3,20 @@ package com.luo.bluetooth.protocol;
 import com.stag.bluetooth.packet.Packet;
 
 public class CustomPacket extends Packet {
-    public CustomPacket(int cmd) {
+    private byte expandCode; // 扩展码：0x55->读；0x66->写；0xAA->读回应；0x99->写回应
+
+    public CustomPacket(int cmd, byte expandCode) {
         super(cmd);
+        this.expandCode = expandCode;
     }
 
-    public CustomPacket(int cmd, byte[] data) {
+    public CustomPacket(int cmd, byte[] data, byte expandCode) {
         super(cmd, data);
+        this.expandCode = expandCode;
+    }
+
+    public byte getExpandCode() {
+        return expandCode;
     }
 
     /**

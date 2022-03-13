@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -99,7 +100,7 @@ public class DeviceListActivity extends BaseActivity implements View.OnClickList
         if (ContextCompat.checkSelfPermission(DeviceListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //请求权限
             ActivityCompat.requestPermissions(DeviceListActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             //判断是否需要 向用户解释，为什么要申请该权限
             ActivityCompat.shouldShowRequestPermissionRationale(DeviceListActivity.this,
                     Manifest.permission.READ_CONTACTS);
@@ -236,6 +237,7 @@ public class DeviceListActivity extends BaseActivity implements View.OnClickList
                 return;
             }
         }
+        Log.i("lpq", "onBluetoothScanFindDevice: device.name = " + device.getName() + "device.mac = " + device.getAddress());
 //        List<BluetoothDeviceBean> deviceBeans = LitePal.where("deviceAddress = ?", device.getAddress()).find(BluetoothDeviceBean.class);
 //        BluetoothDeviceBean model = deviceBeans.size() == 0 ? null : deviceBeans.get(0);
         BluetoothDeviceBean model = null;

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +15,9 @@ import com.luo.bluetooth.customview.searchble.BluetoothDeviceBean;
 import com.luo.bluetooth.customview.searchble.DeviceListActivity;
 import com.luo.bluetooth.protocol.CustomPacket;
 import com.luo.bluetooth.protocol.CustomProtocol;
+import com.luo.bluetooth.protocol.OnTimeoutResult;
+import com.luo.bluetooth.protocol.WeiCeCode;
+import com.luo.bluetooth.protocol.WeiCeDeviceOperate;
 import com.luo.bluetooth.utils.ByteUtils;
 import com.luo.bluetooth.utils.DialogUtils;
 import com.luo.bluetooth.utils.GpsUtils;
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 搜索和连接蓝牙
+     *
      * @param view
      */
     public void btnSearchBle(View view) {
@@ -123,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 使用mac地址连接蓝牙
+     *
      * @param view
      */
     public void btnMacConnect(View view) {
@@ -143,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 蓝牙搜索结果
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -184,7 +191,8 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 蓝牙连接事件回调
-     * @param device 蓝牙设备
+     *
+     * @param device    蓝牙设备
      * @param isSuccess 是否成功
      */
     @Override
@@ -200,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 蓝牙断开连接事件回调
+     *
      * @param device 蓝牙设备
      */
     @Override
@@ -209,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 协议解析测试
+     *
      * @param view
      */
     public void btnProtocolParse(View view) {
@@ -222,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
 
     /**
      * 协议打包测试
+     *
      * @param view
      */
     public void btnProtocolPacket(View view) {
@@ -229,17 +240,25 @@ public class MainActivity extends AppCompatActivity implements OnBluetoothStateC
         CustomProtocol customProtocol = new CustomProtocol(this, null);
         byte[] sendBytes = "00".getBytes(StandardCharsets.US_ASCII);
         LogUtils.d(TAG + "lpq", "confirm: sendBytes = " + ByteUtils.toString(sendBytes));
-        new CustomProtocol(this, null).packetToBytes(new CustomPacket(0x01 /* 命令码 */, sendBytes));
+        new CustomProtocol(this, null).packetToBytes(new CustomPacket(0x01 /* 命令码 */, sendBytes, WeiCeCode.EXPAND_CODE_READ));
     }
 
     /**
      * 发送简单数据
      * 这个不会走封装好的协议
+     *
      * @param view
      */
     public void btnSendConfirmData(View view) {
-        byte[] bytes = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-        mBluetoothController.sendData(bytes);
+        WeiCeDeviceOperate.getSn(new OnTimeoutResult<String>() {
+            @Override
+            public void onResult(boolean isTimeout, String result) {
+                Log.i("lpq", "onResult: isTimeout = " + isTimeout);
+                Log.i("lpq", "onResult: sn = " + result);
+            }
+        }, true);
+//        byte[] bytes = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+//        mBluetoothController.sendData(bytes);
     }
 
 }
